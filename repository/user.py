@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
 
+from sqlalchemy.exc import IntegrityError
+
 from database import UsersOrm
-from utils import auth
+from utils import auth, ThisUsernameIsAlreadyTaken
 
 from .abc import BasicDTO
 
@@ -28,3 +30,10 @@ class User(BasicDTO):
 
     async def delete(self) -> None:
         await self.session.delete(self.obj)
+
+    async def edit_username(self, new_username: str) -> None:
+        try:
+            self.obj.username = new_username
+            await self.session.flush()
+        except IntegrityError:
+            raise ThisUsernameIsAlreadyTaken

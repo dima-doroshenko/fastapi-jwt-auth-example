@@ -6,7 +6,7 @@ from repository import User, Crud
 
 from .meta import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 from .jwt_ import get_current_token_payload, validate_token_type
-from ..exc import UserNotFoundException
+from ..exc import UserNotFoundException, UserInactiveException
 
 
 class UserGetterFromToken:
@@ -23,6 +23,8 @@ class UserGetterFromToken:
         user = await crud.get_user_by_id(payload["sub"])
         if user is None:
             raise UserNotFoundException
+        if not user.is_active:
+            raise UserInactiveException
         return user
 
 
