@@ -25,3 +25,6 @@ class User(BasicDTO):
         return auth.check_password(
             password=password, hashed_password=self.obj.hashed_password
         )
+
+    async def delete(self) -> None:
+        await self.session.delete(self.obj)

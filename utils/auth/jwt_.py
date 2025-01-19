@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime, UTC
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 
 import jwt
 from jwt import InvalidTokenError, ExpiredSignatureError
@@ -11,9 +11,7 @@ from repository import User
 from .meta import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FILED, oauth2_scheme
 from ..exc import (
     InvalidTokenException,
-    InvalidTokenTypeException,
-    UserNotFoundException,
-    TokenExpiredException
+    TokenExpiredException,
 )
 
 
@@ -62,7 +60,7 @@ def create_jwt(
 
 
 def create_access_token(user: User) -> str:
-    jwt_payload = {"sub": user.id, "username": user.username}
+    jwt_payload = {"sub": user.id}
     return create_jwt(
         token_data=jwt_payload,
         token_type=ACCESS_TOKEN_TYPE,
@@ -71,14 +69,13 @@ def create_access_token(user: User) -> str:
 
 
 def create_refresh_token(user: User) -> str:
-    jwt_payload = {
-        "sub": user.id,
-    }
+    jwt_payload = {"sub": user.id}
     return create_jwt(
         token_data=jwt_payload,
         token_type=REFRESH_TOKEN_TYPE,
         expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days),
     )
+
 
 async def get_current_token_payload(
     token: str = Depends(oauth2_scheme),
@@ -93,6 +90,11 @@ async def get_current_token_payload(
 
 
 def validate_token_type(payload: dict, token_type: str) -> bool:
-    if payload.get(TOKEN_TYPE_FILED) == token_type:
+    current_token_type = payload.get(TOKEN_TYPE_FILED)
+    if current_token_type == token_type:
         return True
-    raise InvalidTokenTypeException
+    
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=f'Invalid token type: expected {token_type!r}, get {current_token_type!r}'
+    )

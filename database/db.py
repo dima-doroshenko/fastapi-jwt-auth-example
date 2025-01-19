@@ -6,7 +6,7 @@ from config import settings
 
 class Base(DeclarativeBase):
 
-    def as_dict(self):
+    def as_dict(self) -> dict[str]:
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 

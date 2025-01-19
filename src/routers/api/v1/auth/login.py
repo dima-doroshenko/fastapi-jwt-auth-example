@@ -4,13 +4,15 @@ from utils import auth
 from utils.exc import UnauthedException, UserInactiveException
 from schemas import TokenInfo
 from repository import Crud, User
-
+from config import settings
 
 router = APIRouter()
 
 
 async def validate_auth_user(
-    username: str = Form(), password: str = Form(), crud: Crud = Depends(Crud)
+    username: str = settings.forms.username(),
+    password: str = settings.forms.password(),
+    crud: Crud = Depends(Crud),
 ):
     if not (user := await crud.get_user_by_username(username)):
         raise UnauthedException
