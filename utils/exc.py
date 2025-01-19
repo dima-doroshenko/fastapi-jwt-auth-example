@@ -27,3 +27,8 @@ TokenExpiredException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail='Token has expired'
 )
+
+ThisUsernameIsAlreadyTaken = HTTPException(
+    status.HTTP_409_CONFLICT,
+    detail='User with same username already exists'
+)

@@ -1,9 +1,10 @@
 from fastapi import Depends
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from database import AsyncSession, session_dependency, UsersOrm
-from utils import auth
+from utils import auth, ThisUsernameIsAlreadyTaken
 
 from .user import User
 
@@ -19,7 +20,10 @@ class Crud:
             hashed_password=auth.hash_password(password),
         )
         self.session.add(obj)
-        await self.session.flush()
+        try:
+            await self.session.flush()
+        except IntegrityError:
+            raise ThisUsernameIsAlreadyTaken
         return User(self, obj)
 
     async def get_user_by_id(self, user_id: int) -> User | None:

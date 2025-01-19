@@ -24,6 +24,9 @@ async def validate_auth_user(
 
 @router.post("/login")
 async def login(user: User = Depends(validate_auth_user)) -> TokenInfo:
-    jwt_payload = {"sub": user.id, "username": user.username}
-    token = auth.encode_jwt(jwt_payload)
-    return TokenInfo(access_token=token, token_type="Bearer")
+    access_token = auth.create_access_token(user)
+    refresh_token = auth.create_refresh_token(user)
+    return TokenInfo(
+        access_token=access_token,
+        refresh_token=refresh_token
+    )

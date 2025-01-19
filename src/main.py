@@ -13,5 +13,3 @@ async def app_lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=app_lifespan)
 app.include_router(router)
-
-# jwt.exceptions.ExpiredSignatureError

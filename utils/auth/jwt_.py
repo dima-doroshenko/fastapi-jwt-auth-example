@@ -3,13 +3,18 @@ from datetime import timedelta, datetime, UTC
 from fastapi import Depends
 
 import jwt
-from jwt import InvalidTokenError
+from jwt import InvalidTokenError, ExpiredSignatureError
 
 from config import settings
 from repository import User
 
 from .meta import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FILED, oauth2_scheme
-from ..exc import InvalidTokenException, InvalidTokenTypeException, UserNotFoundException
+from ..exc import (
+    InvalidTokenException,
+    InvalidTokenTypeException,
+    UserNotFoundException,
+    TokenExpiredException
+)
 
 
 def encode_jwt(
@@ -57,9 +62,7 @@ def create_jwt(
 
 
 def create_access_token(user: User) -> str:
-    jwt_payload = {
-        "sub": user.user_id,
-    }
+    jwt_payload = {"sub": user.id, "username": user.username}
     return create_jwt(
         token_data=jwt_payload,
         token_type=ACCESS_TOKEN_TYPE,
@@ -69,7 +72,7 @@ def create_access_token(user: User) -> str:
 
 def create_refresh_token(user: User) -> str:
     jwt_payload = {
-        "sub": user.user_id,
+        "sub": user.id,
     }
     return create_jwt(
         token_data=jwt_payload,
@@ -77,13 +80,14 @@ def create_refresh_token(user: User) -> str:
         expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days),
     )
 
-
-def get_current_token_payload(
+async def get_current_token_payload(
     token: str = Depends(oauth2_scheme),
-):
+) -> dict[str]:
     try:
         payload = decode_jwt(token)
-    except InvalidTokenError as e:
+    except ExpiredSignatureError:
+        raise TokenExpiredException
+    except InvalidTokenError:
         raise InvalidTokenException
     return payload
 
