@@ -4,12 +4,13 @@ from pydantic_settings import BaseSettings
 from pydantic import BaseModel
 
 from fastapi import Form
+from fastapi.params import Form as FormCls
 
 from pathlib import Path
 
 BASEDIR = Path(__file__).parent
 
-get_form_alias: TypeAlias = Callable[[], Form]
+get_form_alias: TypeAlias = Callable[[], FormCls]
 
 class AuthJwt(BaseModel):
     private_key_path: Path = BASEDIR / "certs" / "jwt-private.pem"

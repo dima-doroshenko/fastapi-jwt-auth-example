@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from database import UsersOrm
 from utils import auth, ThisUsernameIsAlreadyTaken
 
-from .abc import BasicDTO
+from .basic_dto import BasicDTO
 
 if TYPE_CHECKING:
     from .crud import Crud

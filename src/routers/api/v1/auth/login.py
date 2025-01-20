@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends
 
 from utils import auth
 from utils.exc import UnauthedException, UserInactiveException
