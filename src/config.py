@@ -8,7 +8,7 @@ from fastapi.params import Form as FormCls
 
 from pathlib import Path
 
-BASEDIR = Path(__file__).parent
+BASEDIR = Path(__file__).parent.parent
 
 get_form_alias: TypeAlias = Callable[[], FormCls]
 

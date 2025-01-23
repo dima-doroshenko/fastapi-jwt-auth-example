@@ -1,10 +1,11 @@
-import uvicorn
+import sys
+
+sys.path[0] += "src/"
 
 from fastapi import FastAPI
 
 from database import engine, Base
-
-from .routers import router
+from routers import router
 
 
 async def app_lifespan(_: FastAPI):
@@ -15,6 +16,3 @@ async def app_lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=app_lifespan)
 app.include_router(router)
-
-if __name__ == "__main__":
-    uvicorn.run(app, reload=True)
