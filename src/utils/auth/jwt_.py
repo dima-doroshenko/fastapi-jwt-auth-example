@@ -1,18 +1,23 @@
 from datetime import timedelta, datetime, UTC
 
+from typing import TYPE_CHECKING
+
 from fastapi import Depends, HTTPException, status
 
 import jwt
 from jwt import InvalidTokenError, ExpiredSignatureError
 
 from config import settings
-from repository import User
 
 from .meta import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FILED, oauth2_scheme
 from ..exc import (
     InvalidTokenException,
     TokenExpiredException,
 )
+
+
+if TYPE_CHECKING:
+    from repository import User
 
 
 def encode_jwt(
@@ -59,7 +64,7 @@ def create_jwt(
     )
 
 
-def create_access_token(user: User) -> str:
+def create_access_token(user: 'User') -> str:
     jwt_payload = {"sub": user.id}
     return create_jwt(
         token_data=jwt_payload,
@@ -68,7 +73,7 @@ def create_access_token(user: User) -> str:
     )
 
 
-def create_refresh_token(user: User) -> str:
+def create_refresh_token(user: 'User') -> str:
     jwt_payload = {"sub": user.id}
     return create_jwt(
         token_data=jwt_payload,

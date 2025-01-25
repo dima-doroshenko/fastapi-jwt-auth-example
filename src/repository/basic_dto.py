@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Union
 
-from database import AsyncSession, Base
+from database import AsyncSession
 
 if TYPE_CHECKING:
     from .crud import Crud
@@ -8,10 +8,6 @@ if TYPE_CHECKING:
 
 
 class BasicDTO:
-    crud: "Crud"
+    crud: 'Crud'
     session: AsyncSession
     user: Union["User", None] = None
-
-    def _from_orm_to_attrs(self, obj: Base):
-        for key, value in obj.as_dict().items():
-            setattr(self, key, value)

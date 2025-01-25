@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from repository import Crud
-from schemas import TokenInfo
+from schemas import TokenInfo, UserRegister
 from config import settings
 
 from .login import login
@@ -11,9 +11,8 @@ router = APIRouter()
 
 @router.post("/register")
 async def register(
-    username: str = settings.forms.username(),
-    password: str = settings.forms.password(),
+    registration_data: UserRegister,
     crud: Crud = Depends(Crud),
 ) -> TokenInfo:
-    user = await crud.create_user(username, password)
+    user = await crud.create_user(registration_data)
     return await login(user)

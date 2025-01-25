@@ -27,6 +27,16 @@ TokenExpiredException = HTTPException(
 )
 
 ThisUsernameIsAlreadyTaken = HTTPException(
-    status.HTTP_409_CONFLICT,
+    status.HTTP_400_BAD_REQUEST,
     detail='User with same username already exists'
+)
+
+ThisEmailIsAlreadyTaken = HTTPException(
+    status.HTTP_400_BAD_REQUEST,
+    detail='User with same email already exists'
+)
+
+EmailIsNotVerified = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail='Your email is not verified'
 )

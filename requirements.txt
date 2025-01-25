@@ -8,3 +8,4 @@ python-multipart==0.0.9
 pydantic-settings==2.2.1
 uvicorn==0.29.0
 cryptography==38.0.4
+email_validator==2.1.1

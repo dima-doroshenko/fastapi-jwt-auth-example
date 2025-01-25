@@ -1,6 +1,5 @@
 import sys
-
-sys.path[0] += "src/"
+sys.path[0] += "/src/"
 
 from fastapi import FastAPI
 
@@ -14,5 +13,5 @@ async def app_lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=app_lifespan)
+app = FastAPI(title="JWT Auth Example", lifespan=app_lifespan)
 app.include_router(router)
