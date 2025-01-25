@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from database import AsyncSession, session_dependency, UsersOrm
-from utils import auth, ThisUsernameIsAlreadyTaken
+from utils import auth, ThisUsernameIsAlreadyTaken, ThisEmailIsAlreadyTaken
 from schemas import UserRegister
 
 from .user import User
@@ -25,7 +25,10 @@ class Crud:
         try:
             await self.session.flush()
         except IntegrityError as e:
-            raise ThisUsernameIsAlreadyTaken
+            if 'users.email' in str(e):
+                raise ThisEmailIsAlreadyTaken
+            else:
+                raise ThisUsernameIsAlreadyTaken
         return User(self, obj)
 
     async def get_user_by_id(self, user_id: int) -> User | None:

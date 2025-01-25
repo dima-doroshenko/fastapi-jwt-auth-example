@@ -49,3 +49,9 @@ class UserProperties:
     @deprecated('Email must be edit via the user.set_email(...)')
     def email(self, value: str) -> None:
         raise NotImplementedError
+    
+    @hashed_password.setter
+    @deprecated('Password must be edit via the user.set_password(...)')
+    def hashed_password(self, value: str) -> None:
+        raise NotImplementedError
+    

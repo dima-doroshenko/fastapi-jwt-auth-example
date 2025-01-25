@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
-from datetime import datetime
 
 from sqlalchemy.exc import IntegrityError
 
 from database import UsersOrm
-from utils import auth, ThisUsernameIsAlreadyTaken
+from utils import auth, ThisUsernameIsAlreadyTaken, ThisEmailIsAlreadyTaken
 
 from .basic_dto import BasicDTO
 from .properies import UserProperties
@@ -43,7 +42,7 @@ class User(BasicDTO, UserProperties):
             self.verified = False
             await self.session.flush()
         except IntegrityError:
-            raise ThisUsernameIsAlreadyTaken
+            raise ThisEmailIsAlreadyTaken
 
     async def set_password(self, password: str) -> None:
         self.obj.hashed_password = auth.hash_password(password)

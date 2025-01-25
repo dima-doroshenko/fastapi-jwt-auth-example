@@ -8,6 +8,6 @@ if TYPE_CHECKING:
 
 
 class BasicDTO:
-    crud: 'Crud'
+    crud: "Crud"
     session: AsyncSession
     user: Union["User", None] = None
