@@ -24,7 +24,7 @@ class UserGetterFromToken:
         crud: Crud = Depends(Crud),
     ) -> 'User':
         validate_token_type(payload, self.token_type)
-        user = await crud.get_user_by_id(payload["sub"])
+        user = await crud.get_user(id=payload["sub"])
         if user is None:
             raise UserNotFoundException
         if not user.is_active:

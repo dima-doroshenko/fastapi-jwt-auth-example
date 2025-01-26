@@ -13,7 +13,12 @@ async def validate_auth_user(
     password: str = Form(),
     crud: Crud = Depends(Crud),
 ):
-    if not (user := await crud.get_user_by_username(username)):
+    filter_key = "email" if "@" in username else "username"
+    if not (
+        user := await crud.get_user(
+            **{filter_key: username}
+        )
+    ):
         raise UnauthedException
     if not user.check_password(password):
         raise UnauthedException
@@ -23,11 +28,8 @@ async def validate_auth_user(
     return user
 
 
-@router.post("/login")
+@router.post("/login", description='Login to your account via username or email')
 async def login(user: User = Depends(validate_auth_user)) -> TokenInfo:
     access_token = auth.create_access_token(user)
     refresh_token = auth.create_refresh_token(user)
-    return TokenInfo(
-        access_token=access_token,
-        refresh_token=refresh_token
-    )
+    return TokenInfo(access_token=access_token, refresh_token=refresh_token)

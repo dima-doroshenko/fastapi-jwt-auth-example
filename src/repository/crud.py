@@ -19,25 +19,20 @@ class Crud:
         obj = UsersOrm(
             username=registration_data.username,
             hashed_password=auth.hash_password(registration_data.password),
-            email=registration_data.email
+            email=registration_data.email,
         )
         self.session.add(obj)
         try:
             await self.session.flush()
         except IntegrityError as e:
-            if 'users.email' in str(e):
+            if "users.email" in str(e):
                 raise ThisEmailIsAlreadyTaken
             else:
                 raise ThisUsernameIsAlreadyTaken
         return User(self, obj)
 
-    async def get_user_by_id(self, user_id: int) -> User | None:
-        obj = await self.session.get(UsersOrm, user_id)
-        if obj:
-            return User(self, obj)
-
-    async def get_user_by_username(self, username: str) -> User | None:
-        query = select(UsersOrm).where(UsersOrm.username == username)
+    async def get_user(self, **filter_by) -> User | None:
+        query = select(UsersOrm).filter_by(**filter_by)
         res = await self.session.execute(query)
         user_obj = res.scalars().one_or_none()
 

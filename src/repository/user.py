@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from database import UsersOrm
 from utils import auth, ThisUsernameIsAlreadyTaken, ThisEmailIsAlreadyTaken
 
-from .basic_dto import BasicDTO
+from .abstractions import AbstractDTO
 from .properies import UserProperties
 from .email import Email
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from .crud import Crud
 
 
-class User(BasicDTO, UserProperties):
+class User(AbstractDTO, UserProperties):
 
     def __init__(self, crud: "Crud", user_obj: UsersOrm):
         self.crud = crud

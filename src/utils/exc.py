@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 
 UnauthedException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Invalid username or password'
+    detail='Invalid login or password'
 )
 
 UserNotFoundException = HTTPException(

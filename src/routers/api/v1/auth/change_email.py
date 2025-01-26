@@ -12,16 +12,18 @@ router = APIRouter()
 async def change_email(user: get_current_user) -> Answer:
     if not user.verified:
         raise EmailIsNotVerified
-    return await user.email_actions.send_confirmation(
+    await user.email_actions.send_confirmation(
         EmailConfirmationType.change_email
     )
+    return Answer(detail="A confirmation message sent to your email")
+
 
 @router.post("/change-email/{code}", response_model_exclude_none=True)
 async def set_new_email(
     data: ConfirmationEmailSchema,
     user: get_current_user,
 ) -> Answer:
-    await user.email_actions.verify(data.code, EmailConfirmationType.change_email)
+    await user.email_actions.verify_code(data.code, EmailConfirmationType.change_email)
     await user.email_actions.clear()
     await user.set_email(data.email)
     return Answer()

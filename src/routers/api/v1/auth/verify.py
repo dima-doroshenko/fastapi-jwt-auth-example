@@ -13,12 +13,13 @@ async def verify_email(user: get_current_user) -> Answer:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email already verified"
         )
-    return await user.email_actions.send_confirmation(EmailConfirmationType.verify)
+    await user.email_actions.send_confirmation(EmailConfirmationType.verify)
+    return Answer(detail="A confirmation message sent to your email")
 
 
 @router.post("/verify/{code}", response_model_exclude_none=True)
-async def confirm_verification(code: str, user: get_current_user) -> Answer:
-    await user.email_actions.verify(code, EmailConfirmationType.verify)
+async def confirm_verification(code: int, user: get_current_user) -> Answer:
+    await user.email_actions.verify_code(code, EmailConfirmationType.verify)
     await user.email_actions.clear()
     user.verified = True
     return Answer()
