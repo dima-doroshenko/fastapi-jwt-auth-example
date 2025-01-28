@@ -26,6 +26,7 @@ class Auth(BaseModel):
 
 class DBSettings(BaseModel):
     url: str = "sqlite+aiosqlite:///database.db"
+    test_url: str = url[:-3]+'_test.db'
 
 
 class Settings(BaseSettings):

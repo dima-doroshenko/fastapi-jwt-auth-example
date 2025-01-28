@@ -18,7 +18,7 @@ async def forgot_password(user: get_current_user) -> Answer:
     return Answer(detail="A confirmation message sent to your email")
 
 
-@router.post("/forgot-password/{code}", response_model_exclude_none=True)
+@router.post("/forgot-password/", response_model_exclude_none=True)
 async def set_new_password(
     data: ConfirmationPasswordSchema,
     user: get_current_user,

@@ -8,7 +8,8 @@ from .user import (
 )
 from .confirmation import (
     ConfirmationEmailSchema, 
-    ConfirmationPasswordSchema
+    ConfirmationPasswordSchema,
+    VerificationCode as VerificationCodeSchema
 )
 from .token import TokenInfo
 from .answer import Answer
