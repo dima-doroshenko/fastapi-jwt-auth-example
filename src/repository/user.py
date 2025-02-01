@@ -26,9 +26,6 @@ class User(AbstractDTO, UserProperties):
             password=password, hashed_password=self.obj.hashed_password
         )
 
-    async def delete(self) -> None:
-        await self.session.delete(self.obj)
-
     async def set_username(self, username: str) -> None:
         try:
             self.obj.username = username

@@ -8,8 +8,8 @@ router = APIRouter()
 
 
 @router.delete("/", response_model_exclude_none=True)
-async def delete_account(
+async def deactivate_account(
     user: get_current_user,
 ) -> Answer:
-    await user.delete()
+    user.is_active = False
     return Answer()

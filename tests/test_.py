@@ -89,6 +89,7 @@ async def test_token_type_validation(ac: AsyncClient):
     assert response.status_code == 401
     assert "Invalid token type" in response.json()["detail"]
 
+
 @pytest.mark.parametrize(
     "url, data, tests",
     [
@@ -99,11 +100,11 @@ async def test_token_type_validation(ac: AsyncClient):
         ],
         [
             "auth/change-email",
-            {'email': "test@example.com"},
+            {"email": "test@example.com"},
             (
                 lambda me: me.email == "test@example.com",
                 lambda me: me.verified == False,
-            )
+            ),
         ],
     ],
 )
@@ -117,9 +118,11 @@ async def test_need_verification(
         tests = (tests,)
 
     await ac.post(url)
-    response = await ac.post(url + '/', json=dict(code=await get_verification_code(), **data))
+    response = await ac.post(
+        url + "/", json=dict(code=await get_verification_code(), **data)
+    )
     assert response.status_code == 200
     me = await get_me()
-    
+
     for test in tests:
         assert test(me)

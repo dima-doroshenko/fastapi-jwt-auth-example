@@ -8,9 +8,10 @@ BASEDIR = Path(__file__).parent.parent
 
 
 class Email(BaseModel):
-    login: str = 'text@example.com'
-    password: str = 'password123'
+    login: str = "text@example.com"
+    password: str = "password123"
     code_expire_timedelta: timedelta = timedelta(minutes=15)
+
 
 class AuthJwt(BaseModel):
     private_key_path: Path = BASEDIR / "certs" / "jwt-private.pem"
@@ -26,7 +27,7 @@ class Auth(BaseModel):
 
 class DBSettings(BaseModel):
     url: str = "sqlite+aiosqlite:///database.db"
-    test_url: str = url[:-3]+'_test.db'
+    test_url: str = url[:-3] + "_test.db"
 
 
 class Settings(BaseSettings):
