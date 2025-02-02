@@ -18,6 +18,7 @@ class Email(BaseModel):
     login: str = env.get("EMAIL_LOGIN")
     password: str = env.get("EMAIL_PASSWORD")
     code_expire_timedelta: timedelta = timedelta(minutes=15)
+    debug: bool = False
 
 
 class AuthJwt(BaseModel):
@@ -48,15 +49,6 @@ class Settings(BaseSettings):
     auth: Auth = Auth()
     email: Email = Email()
     app: App = App()
-
-    def debug_decorator(self, func):
-        """Если debug == True, функция не выполнится"""
-
-        def wrapper(*args, **kwgs) -> Any | None:
-            if not self.app.debug:
-                return func(*args, **kwgs)
-
-        return wrapper
 
 
 settings = Settings()

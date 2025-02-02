@@ -17,12 +17,12 @@ class EmailSender:
         self.email = email
         self.server.login(email, password)
 
-    @settings.debug_decorator
     def send_msg(self, to_email: str, text: str, subject: str = settings.app.name) -> None:
-        self.server.sendmail(
-            from_addr=self.email,
-            to_addrs=to_email,
-            msg=f'Subject: {subject}\n\n{text}'
-        )
+        if not settings.email.debug:
+            self.server.sendmail(
+                from_addr=self.email,
+                to_addrs=to_email,
+                msg=f'Subject: {subject}\n\n{text}'
+            )
 
 email_sender = EmailSender()

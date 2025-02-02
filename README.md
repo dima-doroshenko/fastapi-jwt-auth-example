@@ -21,6 +21,10 @@ pip install -r requirements.txt
 pytest -v -s -c tests\pytest.ini
 ```
 
+### Настройки
+
+Файл настроек: **`src\config.py`**
+
 ## Запуск приложения
 
 ### Через `uvicorn`
