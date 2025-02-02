@@ -36,7 +36,7 @@ class Email(AbstractDTO):
 
         email_sender.send_msg(
             self.user.email,
-            f"Код подтверждения: {self.verifcation_code}",
+            f"Confirmation code: {self.verifcation_code}",
         )
         user_id = self.user.id
         obj = EmailMessagesOrm(

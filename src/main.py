@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from database import engine, Base
 from routers import router
+from config import settings
 
 
 async def app_lifespan(_: FastAPI):
@@ -13,5 +14,9 @@ async def app_lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="JWT Auth Example", lifespan=app_lifespan)
+app = FastAPI(
+    title=settings.app.name, 
+    debug=settings.app.debug,
+    lifespan=app_lifespan
+)
 app.include_router(router)

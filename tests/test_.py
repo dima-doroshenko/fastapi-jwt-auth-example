@@ -28,19 +28,19 @@ async def test_registration(ac: AsyncClient):
     response = await ac.post(
         "auth/register",
         json={
-            "email": "email@email.com",
+            "email": "user@example.com",
             "password": "adminadmin",
             "username": "admin",
         },
     )
     token = response.json()["access_token"]
-    ac.headers.update({"Authorization": f"Bearer {token}"})
+    ac.headers["Authorization"] = f"Bearer {token}"
 
 
 async def test_login_by_email(ac: AsyncClient):
     response = await ac.post(
         "auth/login",
-        data={"username": "email@email.com", "password": "adminadmin"},
+        data={"username": "user@example.com", "password": "adminadmin"},
     )
     assert response.status_code == 200
     token = response.json()["access_token"]
@@ -53,7 +53,7 @@ async def test_get_me(ac: AsyncClient, test: bool = True) -> dict[str]:
     json = response.json()
     if not test:
         return json
-    assert json["email"] == "email@email.com"
+    assert json["email"] == "user@example.com"
     assert json["username"] == "admin"
     assert json["verified"] == False
     assert json["id"] == 1
@@ -79,7 +79,7 @@ async def test_verify_email(ac: AsyncClient):
 
 async def test_confirm_verify_email(ac: AsyncClient):
     code = await get_verification_code()
-    response = await ac.post(f"auth/verify/{code}")
+    response = await ac.post(f"auth/verify/", json={"code": code})
     assert response.status_code == 200
     assert (await test_get_me(ac, test=False))["verified"] == True
 
@@ -100,9 +100,9 @@ async def test_token_type_validation(ac: AsyncClient):
         ],
         [
             "auth/change-email",
-            {"email": "test@example.com"},
+            {"email": "new@example.com"},
             (
-                lambda me: me.email == "test@example.com",
+                lambda me: me.email == "new@example.com",
                 lambda me: me.verified == False,
             ),
         ],
@@ -111,7 +111,7 @@ async def test_token_type_validation(ac: AsyncClient):
 async def test_need_verification(
     url: str,
     data: dict,
-    tests: Iterable[Callable[[User], Any]] | Callable[[User], Any],
+    tests: Callable[[User], bool] | Iterable[Callable[[User], bool]],
     ac: AsyncClient,
 ):
     if callable(tests):

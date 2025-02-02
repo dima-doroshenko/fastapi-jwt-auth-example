@@ -18,6 +18,8 @@ from main import app
 from database import session_dependency, Base
 
 
+settings.app.debug = True
+
 engine = create_async_engine(settings.db.test_url, poolclass=NullPool)
 session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
