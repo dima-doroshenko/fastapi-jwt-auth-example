@@ -12,4 +12,4 @@ from .confirmation import (
     VerificationCode as VerificationCodeSchema
 )
 from .token import TokenInfo
-from .answer import Answer
+from .answer import Answer, Error
