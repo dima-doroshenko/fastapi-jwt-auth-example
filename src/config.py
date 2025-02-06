@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic_settings import BaseSettings
 from pydantic import BaseModel
 
@@ -8,7 +6,6 @@ from pathlib import Path
 from datetime import timedelta
 
 BASEDIR = Path(__file__).parent.parent
-
 env = dotenv.dotenv_values(str(BASEDIR / ".env"))
 
 

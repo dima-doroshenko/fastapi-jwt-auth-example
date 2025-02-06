@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from utils.auth import get_current_user
-from utils import EmailIsNotVerified
+from utils import EmailIsNotVerified, EmailAlreadyVerified
 from database import EmailConfirmationType
-from schemas import Answer, ConfirmationEmailSchema
+from schemas import Answer, ConfirmationEmailSchema, UserNewEmail
 
 router = APIRouter()
 
@@ -24,6 +24,18 @@ async def set_new_email(
     user: get_current_user,
 ) -> Answer:
     await user.email_actions.verify_code(data.code, EmailConfirmationType.change_email)
+    await user.email_actions.clear()
+    await user.set_email(data.email)
+    return Answer()
+
+
+@router.post("/change-unverified-email", response_model_exclude_none=True)
+async def change_unverified_email(
+    data: UserNewEmail,
+    user: get_current_user,
+) -> Answer:
+    if user.verified:
+        raise EmailAlreadyVerified
     await user.email_actions.clear()
     await user.set_email(data.email)
     return Answer()

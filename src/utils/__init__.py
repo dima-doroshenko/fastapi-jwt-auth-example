@@ -6,7 +6,8 @@ from .exc import (
     TokenExpiredException,
     ThisUsernameIsAlreadyTaken,
     EmailIsNotVerified,
-    ThisEmailIsAlreadyTaken
+    ThisEmailIsAlreadyTaken,
+    EmailAlreadyVerified
 )
 from .auth import (
     get_current_user, 

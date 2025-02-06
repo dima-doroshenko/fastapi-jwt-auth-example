@@ -72,6 +72,11 @@ async def test_not_verified_user(url: str, ac: AsyncClient):
     assert "email is not verified" in response.json()["detail"]
 
 
+async def test_change_unverified_email(ac: AsyncClient):
+    response = await ac.post('/auth/change-unverified-email', json={'email': 'user@example.com'})
+    assert response.status_code == 200
+
+
 async def test_verify_email(ac: AsyncClient):
     response = await ac.post("auth/verify")
     assert response.status_code == 200
@@ -84,6 +89,12 @@ async def test_confirm_verify_email(ac: AsyncClient):
     assert (await test_get_me(ac, test=False))["verified"] == True
 
 
+async def test_change_unverified_email_(ac: AsyncClient):
+    response = await ac.post('/auth/change-unverified-email', json={'email': 'test@example.com'})
+    assert response.status_code == 400
+    assert response.json()['detail'] == 'Email already verified'
+
+
 async def test_token_type_validation(ac: AsyncClient):
     response = await ac.post("auth/refresh")
     assert response.status_code == 401
@@ -91,7 +102,7 @@ async def test_token_type_validation(ac: AsyncClient):
 
 
 @pytest.mark.parametrize(
-    "url, data, tests",
+    "url, json, tests",
     [
         [
             "auth/forgot-password",
@@ -110,7 +121,7 @@ async def test_token_type_validation(ac: AsyncClient):
 )
 async def test_need_verification(
     url: str,
-    data: dict,
+    json: dict,
     tests: Callable[[User], bool] | Iterable[Callable[[User], bool]],
     ac: AsyncClient,
 ):
@@ -119,7 +130,7 @@ async def test_need_verification(
 
     await ac.post(url)
     response = await ac.post(
-        url + "/", json=dict(code=await get_verification_code(), **data)
+        url + "/", json=dict(code=await get_verification_code(), **json)
     )
     assert response.status_code == 200
     me = await get_me()
