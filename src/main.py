@@ -17,7 +17,11 @@ async def app_lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.app.name, debug=settings.app.debug, lifespan=app_lifespan)
+app = FastAPI(
+    title=settings.app.name, 
+    debug=settings.app.debug, 
+    lifespan=app_lifespan
+)
 
 
 @app.exception_handler(HTTPException)

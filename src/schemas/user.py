@@ -16,16 +16,18 @@ class UserNewPassword(BaseModel):
 class UserNewEmail(BaseModel):
     email: EmailStr
 
+class UserID(BaseModel):
+    id: int = Field(ge=1)
 
-class UserLogin(UserNewUsername, UserNewPassword):
+
+class UserLogin(UserNewPassword, UserNewUsername):
     ...
 
 
-class UserRegister(UserLogin, UserNewEmail):
+class UserRegister(UserNewEmail, UserLogin):
     ...
 
 
-class UserRead(UserNewUsername, UserNewEmail):
-    id: int
+class UserRead(UserNewEmail, UserNewUsername, UserID):
     verified: bool
     created_at: datetime
