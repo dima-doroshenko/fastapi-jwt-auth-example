@@ -1,9 +1,8 @@
-from datetime import timedelta, datetime, UTC
-
 from typing import TYPE_CHECKING
 
 from fastapi import Depends, HTTPException, status
 
+from datetime import timedelta, datetime, UTC
 import jwt
 from jwt import InvalidTokenError, ExpiredSignatureError
 
@@ -14,7 +13,6 @@ from ..exc import (
     InvalidTokenException,
     TokenExpiredException,
 )
-
 
 if TYPE_CHECKING:
     from repository import User

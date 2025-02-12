@@ -7,10 +7,10 @@ from .exc import (
     ThisUsernameIsAlreadyTaken,
     EmailIsNotVerified,
     ThisEmailIsAlreadyTaken,
-    EmailAlreadyVerified
+    EmailAlreadyVerified,
 )
 from .auth import (
-    get_current_user, 
+    get_current_user,
     get_current_user_for_refresh,
 )
 from .email_sender_ import email_sender

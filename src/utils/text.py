@@ -1,0 +1,1 @@
+confirmation_sent = "A confirmation message sent to your email"

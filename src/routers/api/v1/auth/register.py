@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 
 from repository import Crud
 from schemas import TokenInfo, UserRegister
-from config import settings
 
 from .login import login
 

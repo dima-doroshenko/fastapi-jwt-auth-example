@@ -40,9 +40,7 @@ class Email(AbstractDTO):
         )
         user_id = self.user.id
         obj = EmailMessagesOrm(
-            user_id=user_id, 
-            code=self.verifcation_code, 
-            type=confirmation_type
+            user_id=user_id, code=self.verifcation_code, type=confirmation_type
         )
 
         try:
@@ -50,14 +48,13 @@ class Email(AbstractDTO):
             await self.session.flush()
         except IntegrityError:
             await self.session.rollback()
-            stmt = delete(EmailMessagesOrm).where(
-                EmailMessagesOrm.user_id == user_id
-            )
+            stmt = delete(EmailMessagesOrm).where(EmailMessagesOrm.user_id == user_id)
             await self.session.execute(stmt)
             self.session.add(obj)
 
-
-    async def verify_code(self, code: int, confirmation_type: EmailConfirmationType) -> None:
+    async def verify_code(
+        self, code: int, confirmation_type: EmailConfirmationType
+    ) -> None:
         obj = await self.session.get(EmailMessagesOrm, self.user.id)
 
         if (not obj) or not all(

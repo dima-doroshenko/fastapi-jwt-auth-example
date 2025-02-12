@@ -7,9 +7,9 @@ from .user import (
     UserNewEmail,
 )
 from .confirmation import (
-    ConfirmationEmailSchema, 
+    ConfirmationEmailSchema,
     ConfirmationPasswordSchema,
-    VerificationCode as VerificationCodeSchema
+    VerificationCode as VerificationCodeSchema,
 )
 from .token import TokenInfo
 from .answer import Answer, Error
