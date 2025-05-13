@@ -2,7 +2,7 @@
 
 ```bash
 git clone https://github.com/dima-doroshenko/fastapi-jwt-auth-example
-cd fatsapi-jwt-auth-example
+cd fastapi-jwt-auth-example
 pip install -r requirements.txt
 ```
 
